@@ -1,4 +1,11 @@
 package com.mycompany.app;
+import java.nio.charset.StandardCharsets;
+import java.util.logging.Logger;
+import java.util.logging.Level;
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.nio.charset.*;
 
 /**
  * Hello world!
@@ -6,16 +13,23 @@ package com.mycompany.app;
  */
 public class App 
 {
-    public static void main( String[] args )
+    public static void main( String[] args ) throws Exception
     {
+        Logger logger = Logger.getLogger(App.class.getName());
+        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new
+                FileOutputStream(java.io.FileDescriptor.out), StandardCharsets.US_ASCII), 512);
+
         try{
-            Triangle tri = new Triangle(8, 5, 5);
-            System.out.println(tri.getSmall());
-            System.out.println(tri.getMedium());
-            System.out.println(tri.getBig());
+            Triangle tri = new Triangle(9, 7, 3);
+            out.write("Small side: "+Double.toString(tri.getSmall()) + "\n");
+            out.write("Medium side: "+Double.toString(tri.getMedium()) + "\n");
+            out.write("Big side: "+Double.toString(tri.getBig()) + "\n");
+            out.flush();
             tri.showType();
         }catch(IllegalArgumentException iae){
-            System.out.println(iae.getMessage());
+            logger.log(Level.SEVERE, iae.getMessage());
+        }finally{
+            out.close();
         }
     }
 }
